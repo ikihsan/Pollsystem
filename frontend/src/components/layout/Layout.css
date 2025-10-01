@@ -1,0 +1,51 @@
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px 0;
+  min-height: calc(100vh - 80px);
+}
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.page-subtitle {
+  color: #6c757d;
+  font-size: 16px;
+  margin: 0;
+}
+
+.page-content {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  min-height: 400px;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 15px 0;
+  }
+  
+  .page-content {
+    padding: 20px;
+    margin: 0 10px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+  }
+}

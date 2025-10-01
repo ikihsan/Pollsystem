@@ -1,0 +1,57 @@
+import axios from 'axios';
+
+const API_BASE = 'http://localhost:3000';
+
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: API_BASE,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Add request interceptor to include auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('pollToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor to handle auth errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('pollToken');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
+export const apiService = {
+  // Auth endpoints
+  login: (credentials) => api.post('/auth/login', credentials),
+  register: (userData) => api.post('/auth/register', userData),
+
+  // Poll endpoints
+  getPolls: () => api.get('/poll'),
+  getPoll: (id) => api.get(`/poll/${id}`),
+  createPoll: (pollData) => api.post('/poll/create', pollData),
+  editPoll: (id, pollData) => api.patch(`/poll/${id}`, pollData),
+  deletePoll: (id) => api.patch(`/poll/delete/${id}`),
+  getPollResults: (id) => api.get(`/poll/results/${id}`),
+  allowUser: (id, email) => api.post(`/poll/allow/${id}`, { email }),
+
+  // Vote endpoints
+  vote: (pollId, optionId) => api.post(`/vote/${pollId}`, { optionId }),
+};
+
+export default api;
