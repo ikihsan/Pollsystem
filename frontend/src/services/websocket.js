@@ -42,7 +42,8 @@ class WebSocketService {
         this.emit('connection', { status: 'error', error });
       });
 
-      // Poll-related events
+            'poll-update',
+      'vote-cast',
       this.socket.on('pollCreated', (data) => {
         this.emit('pollCreated', data);
       });

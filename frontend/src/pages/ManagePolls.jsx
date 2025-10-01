@@ -41,7 +41,7 @@ const ManagePolls = () => {
     try {
       await apiService.deletePoll(pollId);
       setSuccess(`Poll "${pollTitle}" deleted successfully`);
-      loadPolls(); // Refresh the list
+      loadPolls();
       
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(''), 3000);

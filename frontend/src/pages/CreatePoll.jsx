@@ -20,7 +20,6 @@ const CreatePoll = () => {
     options: ['', '']
   });
 
-  // Redirect if not admin
   if (!hasPermission('create_poll')) {
     return (
       <div className="create-poll">
@@ -38,7 +37,6 @@ const CreatePoll = () => {
       [name]: type === 'checkbox' ? checked : value
     }));
     
-    // Clear error when user starts typing
     if (error) setError('');
   };
 
@@ -50,7 +48,6 @@ const CreatePoll = () => {
       options: newOptions
     }));
     
-    // Clear error when user starts typing
     if (error) setError('');
   };
 

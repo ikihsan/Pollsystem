@@ -17,6 +17,8 @@ const Results = () => {
   const [error, setError] = useState('');
 
   // Check for specific poll in URL params
+  const [chartData, setChartData] = useState([]);
+
   const pollId = searchParams.get('poll');
 
   useEffect(() => {
@@ -162,7 +164,6 @@ const Results = () => {
     );
   }
 
-  // Show list of polls to view results for
   return (
     <div className="results">
       <div className="page-header">

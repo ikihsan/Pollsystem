@@ -18,7 +18,6 @@ const Vote = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Check for specific poll in URL params
   const pollId = searchParams.get('poll');
 
   useEffect(() => {
@@ -40,11 +39,10 @@ const Vote = () => {
       const response = await apiService.getPolls();
       const allPolls = response.data;
       
-      // Filter active polls that user can vote on
       const activePolls = allPolls.filter(poll => {
         const now = new Date();
         const expiresAt = new Date(poll.expiresAt);
-        return now < expiresAt; // Only show non-expired polls
+        return now < expiresAt;
       });
       
       setPolls(activePolls);
@@ -139,7 +137,6 @@ const Vote = () => {
     );
   }
 
-  // Show voting interface for selected poll
   if (selectedPoll) {
     const now = new Date();
     const expiresAt = new Date(selectedPoll.expiresAt);
@@ -230,7 +227,6 @@ const Vote = () => {
     );
   }
 
-  // Show list of available polls
   return (
     <div className="vote">
       <div className="page-header">

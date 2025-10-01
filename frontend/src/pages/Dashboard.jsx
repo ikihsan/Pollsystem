@@ -67,7 +67,7 @@ const Dashboard = () => {
 
     try {
       await apiService.deletePoll(pollId);
-      await loadPolls(); // Refresh the list
+      await loadPolls();
     } catch (error) {
       console.error('Error deleting poll:', error);
       setError('Failed to delete poll. Please try again.');
@@ -79,8 +79,7 @@ const Dashboard = () => {
     if (!email) return;
 
     // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       alert('Please enter a valid email address');
       return;
     }

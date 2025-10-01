@@ -45,8 +45,6 @@ export const AuthProvider = ({ children }) => {
       if (result.success) {
         setUser(result.user);
         setIsAuthenticated(true);
-        
-        // Connect WebSocket with notification callback if available
         webSocketService.connect();
         
         return { success: true };
@@ -95,18 +93,16 @@ export const AuthProvider = ({ children }) => {
   const hasPermission = (permission) => {
     if (!user) return false;
     
-    // Admin has all permissions
     if (user.role === 'ADMIN') return true;
     
-    // Define permission mappings
     const permissions = {
       'create_poll': user.role === 'ADMIN',
       'manage_polls': user.role === 'ADMIN',
       'delete_poll': user.role === 'ADMIN',
       'edit_poll': user.role === 'ADMIN',
       'view_all_polls': user.role === 'ADMIN',
-      'vote': true, // All authenticated users can vote
-      'view_results': true // All authenticated users can view results
+      'vote': true,
+      'view_results': true
     };
     
     return permissions[permission] || false;

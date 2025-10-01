@@ -21,7 +21,6 @@ const LoginForm = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -56,7 +55,6 @@ const LoginForm = () => {
     try {
       const result = await login(formData);
       if (result.success) {
-        // Navigate to dashboard on successful login
         navigate(ROUTES.DASHBOARD);
       } else {
         setErrors({ general: result.error });
