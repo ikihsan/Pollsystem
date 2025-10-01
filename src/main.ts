@@ -10,9 +10,9 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.enableCors(
     {
-      origin:[ 'https://pollsystem-q2tg.onrender.com',
-      'http://localhost:3000', 'http://localhost:3001','https://pollsystem-1.onrender.com'
-      ]
+      origin:[ 'https://pollsystem-1.onrender.com'
+      ],
+      credentials:true
       }
   );
   await app.listen(process.env.PORT ?? 3000);
