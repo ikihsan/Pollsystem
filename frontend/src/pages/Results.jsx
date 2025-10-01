@@ -178,36 +178,38 @@ const Results = () => {
             <p>No polls available to view results.</p>
           </div>
         ) : (
-          <div className="polls-grid">
-            <h3>Select a poll to view results:</h3>
-            {polls.map(poll => (
-              <div key={poll.id} className="poll-card">
-                <div className="poll-title">{poll.title}</div>
-                <div className="poll-description">{poll.description || 'No description'}</div>
-                <div className="poll-meta">
-                  Created: {new Date(poll.createdAt).toLocaleDateString()} | 
-                  Status: {new Date(poll.expiresAt) > new Date() ? 'Active' : 'Expired'} |
-                  {poll.isPublic ? ' Public' : ' Private'}
-                </div>
-                <div className="poll-actions">
-                  <Button 
-                    variant="primary" 
-                    onClick={() => handlePollSelect(poll)}
-                  >
-                    View Results
-                  </Button>
-                  {new Date(poll.expiresAt) > new Date() && (
+          <>
+            <h3 className="section-title">Select a poll to view results:</h3>
+            <div className="polls-grid">
+              {polls.map(poll => (
+                <div key={poll.id} className="poll-card">
+                  <div className="poll-title">{poll.title}</div>
+                  <div className="poll-description">{poll.description || 'No description'}</div>
+                  <div className="poll-meta">
+                    Created: {new Date(poll.createdAt).toLocaleDateString()} | 
+                    Status: {new Date(poll.expiresAt) > new Date() ? 'Active' : 'Expired'} |
+                    {poll.isPublic ? ' Public' : ' Private'}
+                  </div>
+                  <div className="poll-actions">
                     <Button 
-                      variant="secondary" 
-                      onClick={() => navigate(`${ROUTES.VOTE}?poll=${poll.id}`)}
+                      variant="primary" 
+                      onClick={() => handlePollSelect(poll)}
                     >
-                      Vote
+                      View Results
                     </Button>
-                  )}
+                    {new Date(poll.expiresAt) > new Date() && (
+                      <Button 
+                        variant="secondary" 
+                        onClick={() => navigate(`${ROUTES.VOTE}?poll=${poll.id}`)}
+                      >
+                        Vote
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>

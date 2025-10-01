@@ -54,14 +54,14 @@ export class PollService {
     
     // Check if user is admin
     const user = await this.prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: userId  },
       select: { role: true }
     });
     
     if (user?.role === 'ADMIN') {
       // Admins can see all polls
       const allPolls = await this.prisma.poll.findMany({
-        where: { isDeleted: false, expiresAt: { gt: new Date() } },
+        where: { isDeleted: false, createdBy: userId },
         include: { options: true },
         orderBy: { createdAt: 'desc' }
       });
@@ -71,12 +71,12 @@ export class PollService {
     
     // Regular users see only public polls and private polls they have access to
     const publicPolls = await this.prisma.poll.findMany({
-      where: { isPublic: true ,isDeleted: false, expiresAt: { gt: new Date() } },
+      where: { isPublic: true ,isDeleted: false,  },
       include: { options: true },
     });
     
     const privatePolls = await this.prisma.poll.findMany({
-      where: { isPublic: false ,isDeleted: false,allowedUsers: { some: { userId } }, expiresAt: { gt: new Date() } },
+      where: { isPublic: false ,isDeleted: false,allowedUsers: { some: { userId } }, },
       include: { options: true },
     });
     this.logger.log(`Found ${publicPolls.length} public polls and ${privatePolls.length} private polls for user: ${userId}`);
@@ -129,10 +129,11 @@ catch(error){
       where: { id: pollId , isDeleted: false, createdBy: userId },  
     });
     if (!poll) throw new Error("Poll not found or you are not the creator");
-    const softdelete = this.prisma.poll.update({
+    const softdelete = await this.prisma.poll.update({
       where: { id: pollId },
       data: { isDeleted: true },
     });
+
     return { message: 'Poll deleted successfully', poll: softdelete };
 } catch (error) {
     this.logger.error(`Error deleting poll with id: ${pollId} by user: ${userId} - ${error.message}`);
