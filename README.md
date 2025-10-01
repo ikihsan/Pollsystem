@@ -1,98 +1,86 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+  Real-Time Polling System
+A full-stack polling app with NestJS + Prisma + PostgreSQL on the backend and React (Vite) on the frontend. It supports real-time voting via WebSockets and provides authentication, role-based access, and poll management.
+________________________________________
+ Tech Stack
+•	Backend: NestJS, Prisma ORM, PostgreSQL
+•	Frontend: React (Vite)
+•	Real-time: Socket.IO
+•	Auth: JWT + Role-based access
+________________________________________
+Application Workflow
+The system is a full-stack real-time application where users register and login to receive JWT tokens that authenticate all their requests. 
+Once logged in, users can view available polls on their dashboard, vote on active polls by selecting options, and see results update instantly through WebSocket connections. 
+Administrators have additional privileges to create new polls with custom options and durations, manage poll access for private polls, and edit or delete existing polls through a dedicated admin panel. 
+The backend validates all operations including vote uniqueness, poll expiry times, and user permissions before processing requests. 
+Real-time updates are broadcast to all connected users whenever someone votes or creates a poll, ensuring everyone sees live results without refreshing.
+ The system maintains security through role-based access control and prevents duplicate voting through database constraints, while Prisma ORM handles all database operations with PostgreSQL.
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Setup
+1. Install Dependencies
+Clone repo
+git clone <repo-url>
+cd myapp
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Backend deps
+npm install
 
-## Description
+Frontend deps
+cd frontend
+npm install
+cd ..
+2. Configure Environment
+Create .env in root:
+DATABASE_URL="postgresql://user:password@localhost:5432/polling_db"
+JWT_SECRET="super-secret-key"
+JWT_EXPIRES_IN=”expirytime”
+PORT=3000
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Project setup
+3. Setup Database
+npx prisma generate
+npx prisma db push
+npx prisma db seed   # optional
+4. Run the App
+Backend:
+npm run start:dev
+# runs at http://localhost:3000
+Frontend:
+cd frontend
+npm run dev
+runs at http://localhost:3001
+Open http://localhost:3001
+________________________________________
+ API Endpoints
+ Auth
+Method	Endpoint	Description
+POST	/auth/register	Register new user
+POST	/auth/login	Login with email + password
+ Polls
+Method	Endpoint	Description
+GET	/poll	Get all polls for current user
+POST	/poll/create	Create a new poll (admin only)
+GET	/poll/:id	Get specific poll details
+PATCH
+GET	/poll/:id
+/poll/results/:pollId	Update poll (admin only)
+Get poll results
+ Voting
+Method	Endpoint	Description
+POST	/vote/:pollId	Cast a vote
+		
+________________________________________
+ Project Structure
+myapp/
+├── src/                      Backend (NestJS)
+│   ├── auth/               Authentication & JWT
+│   ├── poll/                 Poll CRUD
+│   ├── vote/                Voting logic
+│   ├── user/                User management
+│   └── gateway/           WebSockets for real-time
+├── frontend/              React frontend
+│   ├── components/      UI components
+│   ├── pages/              App pages
+│   ├── services/          API + WebSocket calls
+│   └── contexts/           Global state
+├── prisma/                 Database schema + migrations
 
-```bash
-$ npm install
-```
-
-## Compile and run the project
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
