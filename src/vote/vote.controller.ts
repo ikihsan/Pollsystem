@@ -18,7 +18,7 @@ export class VoteController {
     const vote = await this.voteService.createVote(id, req.user.id, body.optionId);
     return { message: 'Vote cast successfully', success: true };
   } catch (error) {
-    throw error; // Let NestJS handle the BadRequestException properly
+    throw error;
   }
 }
 }

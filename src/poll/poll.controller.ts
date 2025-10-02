@@ -11,13 +11,23 @@ import { EditPollDto } from './dto/edit-poll';
 export class PollController {
   constructor(private readonly pollService: PollService) {}
   private readonly logger = new Logger(PollController.name);
-  @UseGuards(JwtAuthGuard,RolesGuard)
-  @Roles('ADMIN')
-  @Post('create')
-  createPoll(@Body() createPollDto: CreatePollDto, @Req() req: any) {
-    this.logger.log(`Creating poll: ${JSON.stringify(createPollDto)}`);
+  
+ @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  getPoll(@Param('id') id: string, @Req() req: any) {
+    this.logger.log(`Getting poll with id: ${id}`);
     const userId = req.user.id;
-    return this.pollService.createPoll(createPollDto, userId);
+    return this.pollService.getPoll(id, userId);
+  }
+
+  
+ 
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  getAllPolls( @Req() req: any) {
+    this.logger.log(`Getting all polls`);
+    const userId = req.user.id;
+    return this.pollService.listPolls(userId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -26,29 +36,20 @@ export class PollController {
     const userId = req.user.id;
     return this.pollService.getResults(id, userId);
   }
-
+@UseGuards(JwtAuthGuard,RolesGuard)
+  @Roles('ADMIN')
+  @Post('create')
+  createPoll(@Body() createPollDto: CreatePollDto, @Req() req: any) {
+    this.logger.log(`Creating poll: ${JSON.stringify(createPollDto)}`);
+    const userId = req.user.id;
+    return this.pollService.createPoll(createPollDto, userId);
+  }
   @UseGuards(JwtAuthGuard,RolesGuard)
   @Roles('ADMIN')
   @Post('allow/:id')
   allowPoll(@Param('id') id: string,@Body() body : { email: string }, @Req() req: any) {
     const userId = req.user.id;
     return this.pollService.allowPoll(id,body.email, userId);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  getPoll(@Param('id') id: string, @Req() req: any) {
-    this.logger.log(`Getting poll with id: ${id}`);
-    const userId = req.user.id;
-    return this.pollService.getPoll(id, userId);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get()
-  getAllPolls( @Req() req: any) {
-    this.logger.log(`Getting all polls`);
-    const userId = req.user.id;
-    return this.pollService.listPolls(userId);
   }
 
   @UseGuards(JwtAuthGuard,RolesGuard)

@@ -103,3 +103,8 @@ Admin previleges
 :allow users to a pool (via their email)
 :vote 
 :view results
+
+
+Ai Usage :
+
+I have used copilot just for designing the styles for frontend.

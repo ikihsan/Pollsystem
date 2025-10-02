@@ -11,12 +11,14 @@ async createVote(pollId : string, userId : string, optionId : string) {
       include: { options: true, allowedUsers: true },
     });
     if (!poll) throw new Error('Poll not found');
+
     if (!poll.isPublic) {
       const allowed = await this.prisma.pollAllowedUsers.findUnique({
         where: { pollId_userId: { pollId, userId } },
       });
       if (!allowed) throw new Error('Not eligible to vote');
     }
+    
   const option = poll.options.find((o) => o.id === optionId);
     if (!option) throw new Error('Invalid option, Option not in poll');
   
