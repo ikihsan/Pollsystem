@@ -63,7 +63,7 @@ export class PollController {
 
   @UseGuards(JwtAuthGuard,RolesGuard)
   @Roles('ADMIN')
-  @Patch(':id')
+  @Patch('edit/:id')
   editPoll(@Param('id') id: string, @Body() editPollDto: EditPollDto, @Req() req: any) {
     this.logger.log(`Editing poll with id: ${id}`);
     const userId = req.user.id;

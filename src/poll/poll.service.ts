@@ -192,17 +192,24 @@ catch(error){
     if (!poll) throw new NotFoundException('Poll not found or you are not the creator');
     const updatedPoll = await this.prisma.poll.update({
       where: { id: pollId },
-      data: { createdBy: userId, ...editPollDto },
+      data: { ...editPollDto },
     });
     
-        if (!updatedPoll.isPublic) {
-            await this.prisma.pollAllowedUsers.create({
-                data: {
-                    pollId: updatedPoll.id,
-                    userId: userId
-                }
-            });
-        }
+     if (!updatedPoll.isPublic) {
+      const existingAccess = await this.prisma.pollAllowedUsers.findUnique({
+        where: { pollId_userId: { pollId: updatedPoll.id, userId: userId } },
+      });
+      
+      if (!existingAccess) {
+        await this.prisma.pollAllowedUsers.create({
+          data: {
+            pollId: updatedPoll.id,
+            userId: userId
+          }
+        });
+      }
+    }
+    
     return { message: 'Poll updated successfully', poll: updatedPoll };
   } catch (error) {
     this.logger.error(`Error editing poll with id: ${pollId} by user: ${userId} - ${error.message}`);
