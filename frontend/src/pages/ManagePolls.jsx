@@ -75,7 +75,7 @@ const ManagePolls = () => {
   };
 
   const handleEditPoll = (pollId) => {
-    navigate(`${ROUTES.EDIT_POLL}?poll=${pollId}`);
+    navigate(`${ROUTES.EDIT_POLL}/${pollId}`);
   };
 
   const handleViewResults = (pollId) => {

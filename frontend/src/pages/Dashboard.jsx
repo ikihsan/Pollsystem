@@ -57,7 +57,7 @@ const Dashboard = () => {
   };
 
   const handleEdit = (pollId) => {
-    navigate(`${ROUTES.EDIT_POLL}?poll=${pollId}`);
+    navigate(`${ROUTES.EDIT_POLL}/${pollId}`);
   };
 
   const handleDelete = async (pollId) => {
