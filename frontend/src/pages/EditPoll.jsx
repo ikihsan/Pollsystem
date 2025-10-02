@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext.jsx';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { apiService } from '../services/api.js';
 import Button from '../components/common/Button.jsx';
 import Loading from '../components/common/Loading.jsx';
@@ -9,7 +9,11 @@ import { ROUTES } from '../utils/constants.js';
 const EditPoll = () => {
   const { hasPermission } = useAuth();
   const navigate = useNavigate();
-  const { pollId } = useParams();
+  const { pollId: routePollId } = useParams();
+  const [searchParams] = useSearchParams();
+  
+  // Support both route parameter and query parameter
+  const pollId = routePollId || searchParams.get('poll');
   
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
